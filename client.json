@@ -1,0 +1,7 @@
+{
+    "Name": "Putin-Client",
+    "ProccessName": "PutinClient",
+    "Version": "1.1",
+    "APIVersion": "102-213-421",
+    "require": "./putin_modules/Client/PutinCli.js"
+}
