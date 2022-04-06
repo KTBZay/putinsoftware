@@ -1,2 +1,1 @@
-const ClientCreator = require('./ClientCreator/ClientCreator');
-const SlashCreator = require('./SlashCreator/SlashCreator');
+const cli_package = require('../../client.json');

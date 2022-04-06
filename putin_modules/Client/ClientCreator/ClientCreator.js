@@ -1,4 +1,6 @@
-const UploadSquense = require('../../Sql/SQLUPLOAD/cmds/upload');
+const { BDS } = require('../Sql/SQLSTARTUP/BDS');
+const { BDU } = require('../Sql/SQLUPLOAD/BDU');
+const UploadSquense = require('../Sql/SQLUPLOAD/cmds/upload');
 
 const ClientCreator = async (name,cfx) =>{
     var d = new Date();
@@ -26,7 +28,13 @@ const ClientCreator = async (name,cfx) =>{
                {name: 'build', value: 'Shows the development details for the bot'},
                {name: 'SQL', value:'Showes if sql is enabled for this bot.'},
                {name: 'Say', value: 'Say a message'},
-               {name: 'Sqlupload', value:'Upload data to a sql'}
+               {name: 'Sqlupload', value:'Upload data to a sql'},
+               {name: 'kick', value: 'Kicks a user'},
+               {name: 'ban', value: 'ban a user'},
+               {name: 'add', value: 'add a role to a  user'},
+               {name: 'remove', value: 'Removes a role from a user'},
+               {name: 'purge', value: 'Deletes messages'},
+               {name: 'rps', value: 'Play rock paper scissors'}
            )
            msg.reply({embeds: [HelpEmbed]})
         }else if(msg.content === `${cfx.BotSettings.prefix}h`){
@@ -39,8 +47,13 @@ const ClientCreator = async (name,cfx) =>{
                {name: 'build', value: 'Shows the development details for the bot'},
                {name: 'SQL', value:'Showes if sql is enabled for this bot.'},
                {name: 'Say', value: 'Say a message'},
-               {name: 'Sqlupload', value:'Upload data to a sql'}
-              
+               {name: 'Sqlupload', value:'Upload data to a sql'},
+               {name: 'kick', value: 'Kicks a user'},
+               {name: 'ban', value: 'ban a user'},
+               {name: 'add', value: 'add a role to a  user'},
+               {name: 'remove', value: 'Removes a role from a user'},
+               {name: 'purge', value: 'Deletes messages'},
+               {name: 'rps', value: 'Play rock paper scissors'}
            )
            msg.reply({embeds: [HelpEmbed]})
         }
@@ -87,9 +100,130 @@ const ClientCreator = async (name,cfx) =>{
 }});
     bot.on('message', (msg) => {
         console.log(`Author: ${msg.author.username} Message: ${msg}, on ${output}`);
+        const ModLogs = `INSERT INTO ModLogs(MsgAuthor,MsgDate,Msg ) VALUES ('${msg.author.username}','${output}', '${msg}')`;
+        BDU.UpLoadData(ModLogs,cfx);
+    })
+    bot.on('message', (msg)=>{
+        if(msg.content === `${cfx.BotSettings.prefix}kick`){
+            const member = msg.mentions.members.first();
+            if (!member)
+            return msg.channel.send("You have not mentioned a user").then(msg => {
+             msg.delete({ timeout: 30000 })
+            })
+            if (!member.kickable)
+            return msg.channel.send("This user is unkickable").then(msg => {
+        msg.delete({ timeout: 30000 })
+    })
+        const reason = args.slice(1).join(" ")
+        if (member) {
+            if (!reason) return member.kick().then(member => {
+                msg.channel.send(`${member.user.tag} was kicked, no reason was provided`);
+            })
+
+            if (reason) return member.kick().then(member => {
+                msg.channel.send(`${member.user.tag} was kicked for ${reason}`);
+            })
+        }
+        }
+
+    })
+    bot.on('message', (message)=>{
+        if(message.content === `${cfx.BotSettings.prefix}ban`){
+        const member = message.mentions.members.first();
+        if (!member)
+            return message.channel.send("You have not mentioned a user").then(msg => {
+                message.delete({ timeout: 30000 })
+    })
+        if (!member.bannable)
+            return message.channel.send("This user is unbannable").then(msg => {
+                message.delete({ timeout: 30000 })
+    })
+        const reason = args.slice(1).join(" ")
+        if (member) {
+            if (!reason) return member.ban().then(member => {
+                message.channel.send(`${member.user.tag} was banned, no reason was provided`);
+            })
+
+            if (reason) return member.ban(reason).then(member => {
+                message.channel.send(`${member.user.tag} was banned for ${reason}`);
+            })
+        }
+        }
+    })
+    bot.on('message', (message)=>{
+        if(message.content === `${cfx.BotSettings.prefix}add`){
+    const member = message.mentions.members.first()
+    if (!member)
+        return message.channel.send("You have not mentioned a user").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    const add = args.slice(1).join(" ")
+    if (!add)
+        return message.channel.send("You have not specified a role").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    const roleAdd = message.guild.roles.cache.find(role => role.name === add)
+    if (!roleAdd)
+        return message.channel.send("This role does not exist").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    if (member.roles.cache.get(roleAdd.id))
+        return message.channel.send(`This user already has the ${add} role`).then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    member.roles.add(roleAdd.id).then((member) => {
+        message.channel.send(`${add} added to ${member.displayName}`)
+    })
+}
+    bot.on('message', (message) =>{
+        if(message.content === `${cfx.BotSettings.prefix}remove`){
+    const member = message.mentions.members.first()
+    if (!member)
+        return message.channel.send("You have not mentioned a user").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    const remove = args.slice(1).join(" ")
+    if (!remove)
+        return message.channel.send("You have not specified a role").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    const roleRemove = message.guild.roles.cache.find(role => role.name === remove)
+    if (!roleRemove)
+        return message.channel.send("This role does not exist").then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    if (!member.roles.cache.get(roleRemove.id))
+        return message.channel.send(`This user does not have the ${remove} role`).then(msg => {
+    msg.delete({ timeout: 30000 })
+})
+    member.roles.remove(roleRemove.id).then((member) => {
+        message.channel.send(`${remove} removed from ${member.displayName}`)
+    })
+}
+
+    })
+    })
+    bot.on('message', (message)=>{
+        if(message.content === `${cfx.BotSettings.prefix}purge`){
+            const number = message.content.slice(6).trim()
+            if(!number) return message.channel.send("You havent specified a number to purge").then(msg => {
+                msg.delete({ timeout: 30000 })
+            })
+           message.channel.bulkDelete(number)
+        }
+    })
+    bot.on('message', (message)=>{
+        if(message.content === `${cfx.BotSettings.prefix}rps`){
+            const options = [
+                "rock :shell: ",
+                "paper :newspaper2:",
+                "scissors :scissors: "
+            ]
+            const option = options[Math.floor(Math.random() * options.length)]
+            message.channel.send(`You got ${option}`)
+        }
     })
     UploadSquense(bot,Discord,cfx)
-    
 bot.login(cfx.BotSettings.token)
 }
 module.exports = {
