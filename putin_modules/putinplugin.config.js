@@ -1,12 +1,16 @@
 try {
+    const { DataType, Host } = require("./System/functions");
+    const { Server } = require("./Server/app")
     const { StartUpProcess } = require("./putin.processes");
     StartUpProcess()
-    const { ClientCreator } = require("./Client/ClientCreator/ClientCreator");
+    const { PutinClient } = require("./Client/ClientCreator/ClientCreator");
     const { SlashCreator } = require("./Client/SlashCreator/SlashCreator");
     module.exports = {
         BotCreator: {
             Slash: SlashCreator,
-            Normal: ClientCreator
+            Normalbot: PutinClient,
+            Server: Server,
+            P: {DataType, Host}
         }
     }
 } catch (error) {

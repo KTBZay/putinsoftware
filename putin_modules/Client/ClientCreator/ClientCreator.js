@@ -1,20 +1,22 @@
-const { BDS } = require('../Sql/SQLSTARTUP/BDS');
-const { BDU } = require('../Sql/SQLUPLOAD/BDU');
-const UploadSquense = require('../Sql/SQLUPLOAD/cmds/upload');
+const { EventEmitter } = require('stream');
+const { StartSqlConnection } = require('../Sql/SQLSTARTUP/BDS');
 
-const ClientCreator = async (name,cfx) =>{
+const  PutinClient = async ({name=" ",cfx = cfx}) =>{
     var d = new Date();
     var month = d.getMonth()+1;
     var day = d.getDate();
     var output = d.getFullYear() + '/' +
     (month<10 ? '0' : '') + month + '/' +
     (day<10 ? '0' : '') + day;
+    const fs = require('fs')
+    const { BDU } = require('../Sql/SQLUPLOAD/BDU');
+    const UploadSquense = require('../Sql/SQLUPLOAD/cmds/upload');
     const package = require('../../../package.json')
     const PUTIN = require('../../../putin.json')
     const Discord = require('discord.js');
-    const bot = new Discord.Client({intents: ["GUILDS","GUILD_MESSAGES", "GUILD_MEMBERS"]});
+    const bot = new Discord.Client({intents: ["GUILDS", 'GUILD_MESSAGES']})
     bot.on('ready', ()=>{
-        console.log(cfx.BotSettings.ReadyMSG + `\n Todays Date: ${output}`);
+        console.log(cfx.BotSettings.ReadyMSG + ` Intent Level: ${bot.options.intents}  \n Todays Date: ${output}`);
         bot.user.setActivity(cfx.BotSettings.Activity);
     })
     bot.on('message', (msg)=>{
@@ -101,8 +103,15 @@ const ClientCreator = async (name,cfx) =>{
     bot.on('message', (msg) => {
         console.log(`Author: ${msg.author.username} Message: ${msg}, on ${output}`);
         const ModLogs = `INSERT INTO ModLogs(MsgAuthor,MsgDate,Msg ) VALUES ('${msg.author.username}','${output}', '${msg}')`;
+        if(!fs.existsSync(`./logs/`)){
+            fs.mkdir('./logs/', (err)=>{
+                console.log(err)
+            })
+        }
         BDU.UpLoadData(ModLogs,cfx);
-    })
+        fs.writeFileSync(`./logs/lastmsg.txt`,`Author: ${msg.author.username} Message: ${msg}, on ${output}`, {flag: 'w'})
+})
+    
     bot.on('message', (msg)=>{
         if(msg.content === `${cfx.BotSettings.prefix}kick`){
             const member = msg.mentions.members.first();
@@ -223,9 +232,42 @@ const ClientCreator = async (name,cfx) =>{
             message.channel.send(`You got ${option}`)
         }
     })
+    bot.on('message', (msg)=>{
+        if(msg.content === `${cfx.BotSettings.prefix}Lastmsg`){
+            const Awaiting_Logs = 'Please wait i am getting the logs now.'
+            msg.reply(Awaiting_Logs);
+            setTimeout(() => {
+                const lastmsg = fs.readFileSync('./logs/lastmsg.txt', {encoding: 'utf-8'})
+                msg.reply(lastmsg);
+            }, 5000);
+        }
+    })
+    bot.on('message', (msg)=>{
+        const GiveawayUser = msg.author.username;
+        const GiveawayUserId = msg.author.id;
+        if(msg.content === `${cfx.BotSettings.prefix}EnterGiveaway`){
+            msg.reply(`Welcome ${GiveawayUser}, Are you trying to join a giveaway?`)
+            const Give_awaytable = `CREATE TABLE Giveaways`
+            BDU.UpLoadData(Give_awaytable,cfx)
+              
+        }
+        if(msg.content === `${cfx.BotSettings.prefix}no`){
+            msg.reply(`We have not added you to the Giveaway Database`)
+        }
+        if(msg.content === `${cfx.BotSettings.prefix}yes`){
+            const GIVEAWAY_TABLE = `CREATE TABLE Giveaways(User VARCHAR(255), Userid VARCHAR(255))`;
+            BDU.UpLoadData(GIVEAWAY_TABLE,cfx)
+            setTimeout(()=>{
+                const Upload = `INSERT INTO Giveaways(User,Userid) VALUES ('${GiveawayUser}', '${GiveawayUserId}')`
+                BDU.UpLoadData(Upload,cfx);
+                msg.reply(`I have entered these details \n Username: ${GiveawayUser} \n UserID: ${GiveawayUserId}`);
+
+            })
+        }
+    })
     UploadSquense(bot,Discord,cfx)
 bot.login(cfx.BotSettings.token)
 }
 module.exports = {
-    ClientCreator
+    PutinClient
 }

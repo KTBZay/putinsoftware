@@ -1,7 +1,7 @@
-const { BDS } = require("../../SQLSTARTUP/BDS")
+const { StartSqlConnection } = require("../../SQLSTARTUP/BDS")
 
 const UploadSquense = async (bot,Discord,cfx)=>{
-    BDS.StartSqlConnection(cfx)
+    StartSqlConnection(cfx)
     bot.on('message', (msg)=>{
         if(msg.content.startsWith(`${cfx.BotSettings.prefix}Sqlupload`)){
            const Msg = msg.content.slice(10).trim()

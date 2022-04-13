@@ -1,0 +1,7 @@
+{
+    "Name": "Putin Express Server", 
+    "ProcessName": "PutinServer",
+    "Version": "1.0.0",
+    "APIVersion": "130-112-594",
+    "require": "./putin_modules/Server"
+}

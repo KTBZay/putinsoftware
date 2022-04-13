@@ -1,6 +1,6 @@
 {
   "name": "ppjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "p.js",
   "directories": {
@@ -14,8 +14,10 @@
   "dependencies": {
     "discord-player": "^5.2.2",
     "discord.js": "^13.6.0",
+    "express": "^4.17.3",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
+    "sequelize": "^6.18.0",
     "slash-create": "^5.4.1"
   }
 }
