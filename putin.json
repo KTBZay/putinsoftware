@@ -1,7 +1,7 @@
 {
     "Name": "Putin Javascript", 
     "ProcessName": "PutinJs",
-    "Version": "1.0.3",
+    "Version": "1.0.4",
     "APIVersion": "120-212-534",
     "require": "./putin_modules/"
 }

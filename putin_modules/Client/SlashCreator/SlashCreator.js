@@ -1,25 +1,25 @@
-const SlashCreator = async (name,cfx,botid) => {
-    const path = require('path')
+const SlashCreator = (appid,publicid,token,port,host) => {
+    const { SlashCreator, FastifyServer } = require('slash-create');
     const {Client} = require('discord.js');
-    const {SlashCreator, GatewayServer} = require('slash-create');
     const bot = new Client({
-        intents: ['GUILD_MESSAGES', 'GUILDS']
+        intents: ['GUILDS', 'GUILD_MESSAGES']
     })
+    const path = require('path');
     const creator = new SlashCreator({
-        applicationID: botid,
-        token: cfx.BotSettings.token,
-     })
-    bot.on('ready', ()=>{
-        console.log(`${name} has started with slashcmds`);
-        bot.user.setActivity(`${name} was created by PutinJS`)
+        applicationID: appid,
+        publicKey: publicid,
+        serverPort: port,
+        serverHost: host,
+        token: token
     })
+
     creator
-        .withServer(
-            new GatewayServer((handler)=>bot.ws.on('INTERACTION_CREATE', handler))
-        )
-        .registerCommandsIn(path.join(__dirname, 'commands'))
-    bot.login(cfx.BotSettings.token)
-}
+     .withServer(new FastifyServer())
+     .registerCommandsIn(path.join(__dirname, 'commands'))
+     .startServer();
+
+        bot.login(token)
+    }
 module.exports = {
     SlashCreator
 }

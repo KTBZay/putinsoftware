@@ -9,7 +9,6 @@ try {
         BotCreator: {
             Slash: SlashCreator,
             Normalbot: PutinClient,
-            Server: Server,
             P: {DataType, Host}
         }
     }

@@ -1,6 +1,7 @@
 const Processer = [];
 const client = require('../client.json');
 const putin = require('../putin.json');
+const { ECHO } = require('./psjs/psFiles/app');
 const server = require('../server.json');
 function StartUpProcess() {
     const Processes = {
@@ -14,7 +15,12 @@ function StartUpProcess() {
         },
         Server:{
             Name: server.ProcessName,
-            Version: server.Version
+            Version: server.Version,
+            Inactive: 'true'
+        },
+        PS:{
+            Name: ECHO.get.profile.name,
+            Version: ECHO.get.profile.version
         }
     };
     Processer.push(Processes);
