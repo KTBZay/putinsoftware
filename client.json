@@ -1,7 +1,7 @@
 {
     "Name": "Putin-Client",
     "ProcessName": "PutinClient",
-    "Version": "1.3",
+    "Version": "1.2",
     "APIVersion": "102-213-421",
     "SQL-Verison": "^2.18.1",
     "require": "./putin_modules/Client/PutinCli.js"
