@@ -1,6 +1,6 @@
 {
   "name": "psjs",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Pop smoke framework that helps in creating discord bots, or using other functions that this framework offers",
   "main": "index.js",
   "scripts": {
