@@ -78,7 +78,7 @@ const  PutinClient = async ({name=" ",cfx = cfx}) =>{
            const PingEmbed = new Discord.MessageEmbed()
            .setColor('GREEN')
            .setImage(msg.author.avatarURL)
-           .setTitle(` ${name} ZaySideKick Say Cmd`)
+           .setTitle(` ${name} Say Cmd`)
            .setDescription(`Command used by ${msg.author.username} \n Said: ${Msg}`)
            msg.reply({embeds: [PingEmbed]})
 }});
