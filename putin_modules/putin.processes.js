@@ -1,8 +1,10 @@
-const Processer = [];
 const client = require('../client.json');
 const putin = require('../putin.json');
+const { createConnection, createAdminConnection } = require('./NetworkHook/server.CreateConnection');
 const { ECHO } = require('./psjs/psFiles/app');
-const server = require('../server.json');
+const Processer = [];
+
+
 function StartUpProcess() {
     const Processes = {
         Client:{
@@ -13,19 +15,17 @@ function StartUpProcess() {
             Name: putin.ProcessName,
             Version: putin.Version
         },
-        Server:{
-            Name: server.ProcessName,
-            Version: server.Version,
-            Inactive: 'true'
-        },
         PS:{
             Name: ECHO.get.profile.name,
             Version: ECHO.get.profile.version
         }
     };
+    createConnection({host: '192.0.0.1'})
+    createAdminConnection({host: '192.0.0.6'})
     Processer.push(Processes);
     console.log(Processer)
 }
 module.exports = {
-    StartUpProcess
+    StartUpProcess,
+    Processer
 }

@@ -13,11 +13,6 @@ const NewApplication = async (name,root, db, {host, user , password }) => {
             if(err) throw err;
             console.log('[E]: SQL connected')
         })
-        const APP_DATA = `CREATE DATABASE ${name}`;
-        conn.query(APP_DATA, (err) => {
-            if(err) throw err;
-            console.log(`[E]: App saved in sql. We are creating your project dir now...`)
-        })
         const fs = require('fs');
         setTimeout(() => {
             const systemCreatetable = `CREATE TABLE SystemData(name VARCHAR (255), root VARCHAR (255), host VARCHAR (255), user VARCHAR (255), password VARCHAR (255))`
