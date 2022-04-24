@@ -1,1 +1,0 @@
-const cli_package = require('../../client.json');

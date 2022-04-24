@@ -1,100 +1,92 @@
-const { EventEmitter } = require('stream');
-const { ECHO } = require('../../psjs/psFiles/app');
-
-const  PutinClient = async ({name=" ",cfx = cfx}) =>{
-    var d = new Date();
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var output = d.getFullYear() + '/' +
-    (month<10 ? '0' : '') + month + '/' +
-    (day<10 ? '0' : '') + day;
-    const fs = require('fs')
-    const package = require('../../../package.json')
-    const PUTIN = require('../../../putin.json')
-    const Discord = require('discord.js');
-    const bot = new Discord.Client({intents: ["GUILDS", 'GUILD_MESSAGES', 'GUILD_BANS']})
-    bot.on('ready', ()=>{
-        console.log(cfx.BotSettings.ReadyMSG + ` Intent Level: ${bot.options.intents}  \n Todays Date: ${output}`);
-        bot.user.setActivity(cfx.BotSettings.Activity);
-    })
-    bot.on('message', (msg)=>{
-        if(msg.content === `${cfx.BotSettings.prefix}help`){
-           const HelpEmbed = new Discord.MessageEmbed()
-           .setColor('DARK_GREEN')
-           .setTitle(`${name} Help Cmd`)
-           .setDescription(`Command used by ${msg.author.username}`)
-           .addFields(
-               {name: 'ping', value: 'Returns the ping of the bot'},
-               {name: 'build', value: 'Shows the development details for the bot'},
-               {name: 'Say', value: 'Say a message'}
-           )
-           msg.reply({embeds: [HelpEmbed]})
-        }else if(msg.content === `${cfx.BotSettings.prefix}h`){
-            const HelpEmbed = new Discord.MessageEmbed()
-           .setColor('DARK_GREEN')
-           .setTitle(`${name} Help Cmd`)
-           .setDescription(`Command used by ${msg.author.username}`)
-           .addFields(
-               {name: 'ping', value: 'Returns the ping of the bot'},
-               {name: 'build', value: 'Shows the development details for the bot'},
-               {name: 'Say', value: 'Say a message'}
-           )
-           msg.reply({embeds: [HelpEmbed]})
-        }
-    })
-    bot.on('message', (msg)=>{
-        if(msg.content === `${cfx.BotSettings.prefix}ping`){
-           const PingEmbed = new Discord.MessageEmbed()
-           .setColor('GREEN')
-           .setTitle(`${name} Ping Cmd`)
-           .setDescription(`Command used by ${msg.author.username} \n Clients ping is: ${bot.ws.ping}`)
-           msg.reply({embeds: [PingEmbed]})
-        }else if(msg.content === `${cfx.BotSettings.prefix}p`){
-            const PingEmbed = new Discord.MessageEmbed()
-           .setColor('GREEN')
-           .setTitle(`${name} Ping Cmd`)
-           .setDescription(`Command used by ${msg.author.username} \n Clients ping is: ${bot.ws.ping}`)
-           msg.reply({embeds: [PingEmbed]})
-        }
-    })
-    bot.on('message', (msg)=>{
-        if(msg.content === `${cfx.BotSettings.prefix}build`){
-           const PingEmbed = new Discord.MessageEmbed()
-           .setColor('GREEN')
-           .setTitle(`${name} Build Cmd`)
-           .setDescription(`Command used by ${msg.author.username} \n Discord-Version: ${package.dependencies['discord.js']} \n PutinJs-Version: ${PUTIN.Version} \n PopSmokeJS-Version: ${ECHO.get.profile.version} \n Author: ${package.author}`)
-           msg.reply({embeds: [PingEmbed]})
-        }else if(msg.content === `${cfx.BotSettings.prefix}b`){
-            const PingEmbed = new Discord.MessageEmbed()
-            .setColor('GREEN')
-            .setTitle(`${name} Build Cmd`)
-            .setDescription(`Command used by ${msg.author.username} \n Discord-Version: ${package.dependencies['discord.js']} \n PutinJs-Version: ${PUTIN.Version} \n PopSmokeJS-Version: ${ECHO.get.profile.version} \n Author: ${package.author}`)
-            msg.reply({embeds: [PingEmbed]})
-        }
-    })
-    bot.on('message', (msg)=>{
-        if(msg.content.startsWith(`${cfx.BotSettings.prefix}say`)){
-           const Msg = msg.content.slice(4).trim()
-           const PingEmbed = new Discord.MessageEmbed()
-           .setColor('GREEN')
-           .setImage(msg.author.avatarURL)
-           .setTitle(` ${name} Say Cmd`)
-           .setDescription(`Command used by ${msg.author.username} \n Said: ${Msg}`)
-           msg.reply({embeds: [PingEmbed]})
-}});
-    bot.on('message', (msg) => {
-        console.log(`Author: ${msg.author.username} Message: ${msg}, on ${output}`);
-        if(!fs.existsSync(`./logs/`)){
-            fs.mkdir('./logs/', (err)=>{
-                console.log(err)
-            })
-        }
-        fs.writeFileSync(`./logs/lastmsg.txt`,`Author: ${msg.author.username} Message: ${msg}, on ${output}`, {flag: 'w'})
-})
-    ECHO.methods.kill(bot,cfx)
-	ECHO.methods.Guildinit(bot,cfx,cfx.MySQLSettings.database)
-bot.login(cfx.BotSettings.token)
-}
+const { About } = require('./utils/about');
+const { transporter } = require('./utils/email');
 module.exports = {
-    PutinClient
+    botCreator: (token,prefix)=>{
+        const Discord = require('discord.js');
+        const bot = new Discord.Client({intents: ["GUILDS", 'GUILD_MESSAGES', 'GUILD_BANS']})
+        bot.on('ready', ()=>{
+            console.log(`i have started and have the intent Level of : ${bot.options.intents}}`);
+            bot.user.setActivity(`${prefix}help | Version: 2.1`);
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}help`){
+            const HelpCommand = new Discord.MessageEmbed()
+                .setColor('BLUE')   
+                .setTitle('Help Panel')
+                .setThumbnail(bot.user.avatarURL())
+                .setDescription('Get help or commands now!' + ` My prefix is ${prefix}`)
+                .addFields([
+                    {name:'help', value: 'shows help panel'},
+                    {name: 'pingstaff', value: 'Puts staff to work'},
+                    {name: 'AboutBot', value: 'Get info on the bot'},
+                    {name:'WhatPing', value: ' Gets the bot ping'},
+                    {name:'Randomtype', value: ' Make the bot type'}
+                ])
+                .setTimestamp()
+                .setFooter('Help Panel')
+                msg.reply({embeds: [HelpCommand]})
+            }
+        })
+        bot.on('message',(msg)=>{
+            if(msg.content === `${prefix}pingstaff`){
+                const SupportEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription('is this bot having a issue? Do Y for yes and N for no. then put a reason for the ping')
+                msg.reply({embeds: [SupportEmbed]})
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content.startsWith(`${prefix}yes`)){
+                const issue = msg.content.slice(4).trim();
+                const SupportEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription('We are notifying support right now!')
+                msg.reply({embeds: [SupportEmbed]})
+                console.log(`User: ${msg.author} is reporting: ${issue}`)
+            }else if(msg.content.startsWith(`${prefix}Y`)){
+                const issue = msg.content.slice(2).trim();
+                const SupportEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription('We are notifying support right now!')
+                msg.reply({embeds: [SupportEmbed]})
+                const data = `User: ${msg.author} is reporting: ${issue}`
+                
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}no`  || msg.content === `${prefix}N`){
+                const SupportEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription('Please join https://discord.gg/nTJ3KMcB2E')
+                msg.reply({embeds: [SupportEmbed]})
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}AboutBot`){
+                const AboutEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription(`${About.Description}`)
+                msg.reply({embeds: [AboutEmbed]})
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}WhatPing`){
+                const PingEmbed = new Discord.MessageEmbed()
+                .setColor('BLUE')
+                .setDescription(`my ping is: ${bot.ws.ping}`)
+                msg.reply({embeds: [PingEmbed]})
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}Randomtype`){
+                msg.channel.sendTyping()
+            }
+        })
+        bot.on('message', (msg) => {
+            if(msg.content === `${prefix}avatar`){
+                msg.reply(bot.user.avatarURL())
+            }
+        })
+        bot.login(token)
+    }
 }
