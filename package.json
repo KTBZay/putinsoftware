@@ -1,15 +1,14 @@
 {
-  "name": "discordbot",
-  "version": "1.0.0",
+  "name": "Putin-Software",
+  "version": "1.0.5",
   "description": "",
   "main": "about.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "silver": "nodemon ./Silverbot/index.js",
-    "zayb": "nodemon ./Zaybot/index.js",
-    "zays": "nodemon ./ZaySlash/index.js"
+    "ter": "no",
+    
   },
   "author": "Zay",
   "license": "ISC",
