@@ -11,4 +11,4 @@ These are our versions that we support
 
 ## Reporting a Vulnerability
 
-Please use pm Lil Durk#6400
+Please pm Lil Durk#6400
