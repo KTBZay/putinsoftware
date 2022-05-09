@@ -1,3 +1,4 @@
+const { Net } = require('../../NetworkHook/hook');
 const { About } = require('./utils/about');
 const { transporter } = require('./utils/email');
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
         bot.on('ready', ()=>{
             console.log(`i have started and have the intent Level of : ${bot.options.intents}}`);
             bot.user.setActivity(`${prefix}help | Version: 2.1`);
+            Net.Createserver()
         })
         bot.on('message', (msg) => {
             if(msg.content === `${prefix}help`){
