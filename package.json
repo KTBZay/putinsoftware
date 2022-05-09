@@ -1,14 +1,10 @@
 {
-  "name": "Putin-Software",
+  "name": "discordbotcreatorputin",
   "version": "2.0.0",
   "description": "",
   "main": "about.js",
   "directories": {
     "test": "tests"
-  },
-  "scripts": {
-    "ter": "no",
-    
   },
   "author": "Zay",
   "license": "ISC",
