@@ -1,5 +1,4 @@
 const { Net } = require('../../NetworkHook/hook');
-const { About } = require('./utils/about');
 const {SkyWalker} = require('../../NetworkHook/functions/server.SkyWalker')
 module.exports = {
     botCreator: (token,prefix)=>{
@@ -22,7 +21,6 @@ module.exports = {
                 .addFields([
                     {name:'help', value: 'shows help panel'},
                     {name: 'pingstaff', value: 'Puts staff to work'},
-                    {name: 'AboutBot', value: 'Get info on the bot'},
                     {name:'WhatPing', value: ' Gets the bot ping'},
                     {name:'Randomtype', value: ' Make the bot type'}
                 ])
@@ -64,14 +62,6 @@ module.exports = {
                 .setColor('BLUE')
                 .setDescription('Please join https://discord.gg/nTJ3KMcB2E')
                 msg.reply({embeds: [SupportEmbed]})
-            }
-        })
-        bot.on('message', (msg) => {
-            if(msg.content === `${prefix}AboutBot`){
-                const AboutEmbed = new Discord.MessageEmbed()
-                .setColor('BLUE')
-                .setDescription(`${About.Description}`)
-                msg.reply({embeds: [AboutEmbed]})
             }
         })
         bot.on('message', (msg) => {
