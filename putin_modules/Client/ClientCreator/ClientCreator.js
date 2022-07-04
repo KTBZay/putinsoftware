@@ -1,8 +1,10 @@
 const { Net } = require('../../NetworkHook/hook');
 const { About } = require('./utils/about');
-const { transporter } = require('./utils/email');
+const {SkyWalker} = require('../../NetworkHook/functions/server.SkyWalker')
 module.exports = {
     botCreator: (token,prefix)=>{
+        console.clear();
+        console.log(SkyWalker.init)
         const Discord = require('discord.js');
         const bot = new Discord.Client({intents: ["GUILDS", 'GUILD_MESSAGES', 'GUILD_BANS']})
         bot.on('ready', ()=>{
@@ -52,6 +54,7 @@ module.exports = {
                 .setDescription('We are notifying support right now!')
                 msg.reply({embeds: [SupportEmbed]})
                 const data = `User: ${msg.author} is reporting: ${issue}`
+                console.log(data)
                 
             }
         })
