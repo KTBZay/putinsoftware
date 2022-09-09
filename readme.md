@@ -1,5 +1,5 @@
 # Welcome to Putin Software
-
+# This is out of date please use <a href="https://github.com/KTBZay/Code-Zero-Projects">Zays Bot Creator</a>
 ### table of contents
 <ol>
   <li>Introduction</li>
